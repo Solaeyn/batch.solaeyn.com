@@ -44,6 +44,14 @@ describe("API auth behavior", () => {
     expect(res.headers["content-type"]).toMatch(/application\/json/);
     expect(res.body).toMatchObject({ success: false });
   });
+
+  it("protects the block and command catalogs behind auth", async () => {
+    const blocks = await request(app).get("/api/blocks/catalog");
+    const commands = await request(app).get("/api/commands/catalog");
+    expect(blocks.status).toBe(401);
+    expect(commands.status).toBe(401);
+    expect(commands.body).toMatchObject({ success: false });
+  });
 });
 
 describe("page auth behavior", () => {

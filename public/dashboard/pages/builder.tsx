@@ -51,6 +51,12 @@ type BlockDefinition = {
   fields: BlockField[];
 };
 
+type WindowsCommand = {
+  name: string;
+  category: string;
+  description: string;
+};
+
 type Block = {
   id: string;
   type: string;
@@ -67,6 +73,12 @@ type BuilderState = {
 
 const paletteList = document.getElementById("paletteList") as HTMLElement | null;
 const paletteSearch = document.getElementById("paletteSearch") as HTMLInputElement | null;
+const paletteToggle = document.getElementById("paletteToggle") as HTMLButtonElement | null;
+const palettePanel = document.getElementById("palettePanel") as HTMLElement | null;
+const commandList = document.getElementById("commandList") as HTMLElement | null;
+const commandSearch = document.getElementById("commandSearch") as HTMLInputElement | null;
+const commandsToggle = document.getElementById("commandsToggle") as HTMLButtonElement | null;
+const commandsPanel = document.getElementById("commandsPanel") as HTMLElement | null;
 const blockList = document.getElementById("blockList") as HTMLElement | null;
 const blockCountEl = document.getElementById("blockCount") as HTMLElement | null;
 const previewCode = document.getElementById("previewCode") as HTMLElement | null;
@@ -85,6 +97,8 @@ const saveBtn = document.getElementById("saveBtn") as HTMLButtonElement | null;
 
 let definitions: BlockDefinition[] = [];
 const definitionMap = new Map<string, BlockDefinition>();
+
+let commands: WindowsCommand[] = [];
 
 const state: BuilderState = {
   scriptId: null,
@@ -127,6 +141,70 @@ const renderPalette = () => {
         <button class="palette-item" type="button" data-add="${escapeHtml(def.type)}">
           <strong>${escapeHtml(def.label)}</strong>
           <span>${escapeHtml(def.description)}</span>
+        </button>
+      `
+    )
+    .join("");
+};
+
+/* ---------- Collapsible panels ---------- */
+const setCollapsed = (panel: HTMLElement | null, toggle: HTMLButtonElement | null, collapsed: boolean) => {
+  if (!panel || !toggle) return;
+  panel.classList.toggle("collapsed", collapsed);
+  toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+};
+
+const initCollapsible = (panel: HTMLElement | null, toggle: HTMLButtonElement | null) => {
+  if (!panel || !toggle) return;
+  toggle.addEventListener("click", () => {
+    setCollapsed(panel, toggle, !panel.classList.contains("collapsed"));
+  });
+};
+
+/* ---------- Windows command reference ---------- */
+// Rank commands by how many search tokens they match so a single word or a
+// whole sentence ("show my ip address") both surface relevant commands.
+const searchCommands = (query: string): WindowsCommand[] => {
+  const tokens = query.toLowerCase().split(/[^a-z0-9]+/).filter((token) => token.length > 1);
+  if (!tokens.length) {
+    return [...commands].sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  const scored = commands
+    .map((command) => {
+      const haystack = `${command.name} ${command.category} ${command.description}`.toLowerCase();
+      let score = 0;
+      for (const token of tokens) {
+        if (command.name.toLowerCase() === token) score += 5;
+        else if (command.name.toLowerCase().includes(token)) score += 3;
+        else if (haystack.includes(token)) score += 1;
+      }
+      return { command, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || a.command.name.localeCompare(b.command.name));
+
+  return scored.map((entry) => entry.command);
+};
+
+const renderCommands = () => {
+  if (!commandList) return;
+  const results = searchCommands((commandSearch?.value || "").trim());
+
+  if (!results.length) {
+    commandList.innerHTML = `<p class="empty-state">No commands match your search.</p>`;
+    return;
+  }
+
+  commandList.innerHTML = results
+    .map(
+      (command) => `
+        <button class="command-item" type="button" data-command="${escapeHtml(command.name)}" title="Add '${escapeHtml(command.name)}' as a Run command block">
+          <span class="command-item-head">
+            <code class="command-name">${escapeHtml(command.name)}</code>
+            <span class="command-cat">${escapeHtml(command.category)}</span>
+          </span>
+          <span class="command-desc">${escapeHtml(command.description)}</span>
         </button>
       `
     )
@@ -228,6 +306,15 @@ const addBlock = (type: string) => {
   schedulePreview();
 };
 
+// Add a chosen Windows command as a prefilled "Run command" block.
+const addCommandBlock = (command: string) => {
+  if (!definitionMap.has("run")) return;
+  state.blocks.push({ id: localId(), type: "run", params: { command } });
+  renderBlocks();
+  schedulePreview();
+  setMessage(`Added "${command}" as a Run command block.`);
+};
+
 const removeBlock = (id: string) => {
   state.blocks = state.blocks.filter((block) => block.id !== id);
   renderBlocks();
@@ -253,6 +340,17 @@ paletteList?.addEventListener("click", (event) => {
   if (!target) return;
   addBlock(String(target.dataset.add));
 });
+
+commandSearch?.addEventListener("input", renderCommands);
+
+commandList?.addEventListener("click", (event) => {
+  const target = (event.target as HTMLElement).closest("[data-command]") as HTMLElement | null;
+  if (!target) return;
+  addCommandBlock(String(target.dataset.command));
+});
+
+initCollapsible(palettePanel, paletteToggle);
+initCollapsible(commandsPanel, commandsToggle);
 
 blockList?.addEventListener("click", (event) => {
   const card = (event.target as HTMLElement).closest(".block-card") as HTMLElement | null;
@@ -404,6 +502,10 @@ const load = async () => {
   definitionMap.clear();
   for (const def of definitions) definitionMap.set(def.type, def);
   renderPalette();
+
+  const commandCatalog = await api("/api/commands/catalog");
+  commands = ((commandCatalog.data as any).commands || []) as WindowsCommand[];
+  renderCommands();
 
   const scriptId = new URLSearchParams(window.location.search).get("script");
   if (scriptId && /^\d+$/.test(scriptId)) {

@@ -1,9 +1,18 @@
 /* Builder page */
 .builder-layout {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr) 340px;
+  grid-template-columns: 280px minmax(0, 1fr) 340px;
   gap: 14px;
   align-items: start;
+}
+
+.builder-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 20px;
+  min-width: 0;
 }
 
 .builder-palette,
@@ -13,8 +22,84 @@
   background: #0b1119;
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
   padding: 14px;
+}
+
+.builder-preview {
   position: sticky;
   top: 20px;
+}
+
+.builder-side .builder-palette {
+  position: static;
+}
+
+/* Collapsible panels */
+.collapsible-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+}
+
+.collapsible-title {
+  display: grid;
+  gap: 4px;
+}
+
+.collapsible-heading {
+  font-family: "Sora", "Segoe UI", sans-serif;
+  font-size: 0.97rem;
+  font-weight: 700;
+}
+
+.collapsible-chevron {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.collapsible-chevron svg {
+  width: 16px;
+  height: 16px;
+}
+
+.collapsible-head:hover .collapsible-chevron {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.collapsible-body {
+  display: block;
+  margin-top: 12px;
+}
+
+.collapsible.collapsed .collapsible-body {
+  display: none;
+}
+
+.collapsible.collapsed .collapsible-chevron {
+  transform: rotate(-90deg);
+}
+
+.commands-hint {
+  margin: 10px 0 8px;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  line-height: 1.4;
 }
 
 .builder-canvas {
@@ -26,8 +111,8 @@
 .palette-list {
   display: grid;
   gap: 6px;
-  margin-top: 12px;
-  max-height: 62vh;
+  margin-top: 10px;
+  max-height: 42vh;
   overflow-y: auto;
 }
 
@@ -62,8 +147,60 @@
   line-height: 1.35;
 }
 
-.palette-search {
-  margin-top: 4px;
+/* Windows command reference list */
+.command-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  max-height: 46vh;
+  overflow-y: auto;
+}
+
+.command-item {
+  display: grid;
+  gap: 3px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 9px 11px;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.command-item:hover {
+  border-color: var(--amber);
+  background: var(--hover);
+  transform: translateY(-1px);
+}
+
+.command-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.command-name {
+  font: 700 0.8rem "IBM Plex Mono", monospace;
+  color: #ffd58a;
+}
+
+.command-cat {
+  color: var(--text-faint);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.command-desc {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  line-height: 1.4;
 }
 
 .meta-grid {
@@ -187,7 +324,7 @@
 
 @media (max-width: 1100px) {
   .builder-layout {
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 260px minmax(0, 1fr);
   }
 
   .builder-preview {
@@ -201,12 +338,17 @@
     grid-template-columns: 1fr;
   }
 
+  .builder-side {
+    position: static;
+  }
+
   .builder-palette,
   .builder-preview {
     position: static;
   }
 
-  .palette-list {
+  .palette-list,
+  .command-list {
     max-height: none;
   }
 

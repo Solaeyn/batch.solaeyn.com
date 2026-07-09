@@ -1,16 +1,46 @@
 <section class="builder-layout">
-  <aside class="builder-palette">
-    <div class="section-head">
-      <div>
-        <span class="section-label">Blocks</span>
-        <h2>Add a block</h2>
+  <div class="builder-side">
+    <aside class="builder-palette collapsible" id="palettePanel">
+      <button class="collapsible-head" type="button" id="paletteToggle" aria-expanded="true" aria-controls="paletteBody">
+        <span class="collapsible-title">
+          <span class="section-label">Blocks</span>
+          <span class="collapsible-heading">Add a block</span>
+        </span>
+        <span class="collapsible-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </span>
+      </button>
+      <div class="collapsible-body" id="paletteBody">
+        <input id="paletteSearch" class="text-input" type="search" placeholder="Search blocks…" autocomplete="off" />
+        <div class="palette-list" id="paletteList">
+          <p class="empty-state">Loading blocks…</p>
+        </div>
       </div>
-    </div>
-    <input id="paletteSearch" class="text-input" type="search" placeholder="Search blocks…" autocomplete="off" />
-    <div class="palette-list" id="paletteList">
-      <p class="empty-state">Loading blocks…</p>
-    </div>
-  </aside>
+    </aside>
+
+    <aside class="builder-palette collapsible commands-panel" id="commandsPanel">
+      <button class="collapsible-head" type="button" id="commandsToggle" aria-expanded="true" aria-controls="commandsBody">
+        <span class="collapsible-title">
+          <span class="section-label">Reference</span>
+          <span class="collapsible-heading">Windows commands</span>
+        </span>
+        <span class="collapsible-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </span>
+      </button>
+      <div class="collapsible-body" id="commandsBody">
+        <input id="commandSearch" class="text-input" type="search" placeholder="Search by name, word, or sentence…" autocomplete="off" />
+        <p class="commands-hint">Click a command to add it as a <code>Run command</code> block.</p>
+        <div class="command-list" id="commandList">
+          <p class="empty-state">Loading commands…</p>
+        </div>
+      </div>
+    </aside>
+  </div>
 
   <div class="builder-canvas">
     <section class="overview-panel builder-meta">

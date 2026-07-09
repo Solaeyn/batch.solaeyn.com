@@ -18,6 +18,7 @@ import {
   normalizeSettings,
   toBatchFileName
 } from "./batch-generator.ts";
+import { WINDOWS_COMMANDS } from "./windows-commands.ts";
 import "./types.ts";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -629,6 +630,10 @@ app.get("/api/me", authRequired, async (req, res) => {
 
 app.get("/api/blocks/catalog", authRequired, (_req, res) => {
   return res.status(200).json({ success: true, blocks: BATCH_BLOCK_DEFINITIONS });
+});
+
+app.get("/api/commands/catalog", authRequired, (_req, res) => {
+  return res.status(200).json({ success: true, commands: WINDOWS_COMMANDS });
 });
 
 app.get("/api/dashboard/overview", authRequired, scriptReadRateLimit, async (req, res) => {
