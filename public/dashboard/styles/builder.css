@@ -1,7 +1,7 @@
 /* Builder page */
 .builder-layout {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr) 340px;
+  grid-template-columns: 300px minmax(0, 1fr) 340px;
   gap: 14px;
   align-items: start;
 }
