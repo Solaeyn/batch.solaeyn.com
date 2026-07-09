@@ -1,0 +1,14 @@
+/* Scripts page */
+.scripts-toolbar {
+  margin-bottom: 12px;
+}
+
+.scripts-toolbar .text-input {
+  max-width: 360px;
+}
+
+@media (max-width: 640px) {
+  .scripts-toolbar .text-input {
+    max-width: none;
+  }
+}

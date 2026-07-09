@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  color: #f2f4f7;
+  background:
+    radial-gradient(720px 340px at 70% -20%, rgba(245, 158, 11, 0.1), transparent 68%),
+    #070b10;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.shell {
+  width: 100%;
+  max-width: 560px;
+}
+
+.panel {
+  border: 1px solid #202a36;
+  border-radius: 18px;
+  background: #0b1119;
+  box-shadow: 0 28px 70px rgba(3, 7, 20, 0.6);
+  overflow: hidden;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #202a36;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #d9850d, #f3a51d);
+  color: #171006;
+  font: 800 0.78rem "IBM Plex Mono", monospace;
+}
+
+.panel-title {
+  margin: 0;
+  font-family: "Sora", "Segoe UI", sans-serif;
+  font-weight: 700;
+}
+
+.panel-subtitle {
+  margin: 2px 0 0;
+  color: #687486;
+  font: 600 0.66rem "IBM Plex Mono", monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff6c86;
+  font: 700 0.72rem "IBM Plex Mono", monospace;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff6c86;
+}
+
+.body {
+  padding: 26px 22px 28px;
+}
+
+.code {
+  margin: 0;
+  font-family: "Sora", "Segoe UI", sans-serif;
+  font-size: 3.4rem;
+  font-weight: 800;
+  color: #f59e0b;
+  letter-spacing: -0.03em;
+}
+
+.body h1 {
+  margin: 8px 0 0;
+  font-family: "Sora", "Segoe UI", sans-serif;
+  font-size: 1.4rem;
+}
+
+.desc {
+  margin: 8px 0 0;
+  color: #98a3b3;
+}
+
+.path {
+  margin: 14px 0 0;
+  color: #768091;
+  font: 500 0.78rem "IBM Plex Mono", monospace;
+  word-break: break-all;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font: 700 0.82rem "Manrope", sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #d9850d, #f3a51d);
+  color: #171006;
+}
+
+.btn-ghost {
+  border-color: #202a36;
+  background: #0b1119;
+  color: #98a3b3;
+}
+
+.btn-ghost:hover {
+  color: #f2f4f7;
+  border-color: #344150;
+}

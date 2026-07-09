@@ -1,0 +1,45 @@
+{
+  "name": "batch-solaeyn-builder",
+  "version": "1.0.0",
+  "description": "Windows .bat script builder for the Solaeyn ecosystem",
+  "main": "src/server.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "nodemon --watch src --ext ts --exec tsx src/server.ts",
+    "dev:client": "node scripts/build-client.mjs --watch",
+    "build": "npm run build:client",
+    "build:client": "node scripts/build-client.mjs --minify",
+    "start": "tsx src/server.ts",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "express",
+    "batch",
+    "bat-builder",
+    "multi-tenant",
+    "coolify"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "compression": "^1.7.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "ioredis": "^5.10.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.20.0",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/supertest": "^7.2.0",
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.28.0",
+    "nodemon": "^3.1.7",
+    "supertest": "^7.1.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  }
+}

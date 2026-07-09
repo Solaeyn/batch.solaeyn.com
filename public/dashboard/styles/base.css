@@ -1,0 +1,8 @@
+/* Shared dashboard shell styles */
+body {
+  color-scheme: dark;
+}
+
+.workspace-shell {
+  isolation: isolate;
+}

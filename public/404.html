@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Not Found | Solaeyn's .bat Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Manrope:wght@400;500;700;800&family=Sora:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/404.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel" role="alert" aria-live="polite">
+        <header class="panel-head">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true">.bat</span>
+            <div>
+              <p class="panel-title">Solaeyn</p>
+              <p class="panel-subtitle">.bat Builder</p>
+            </div>
+          </div>
+          <div class="status"><span class="status-dot"></span> 404 Not Found</div>
+        </header>
+
+        <div class="body">
+          <p class="code">404</p>
+          <h1>This page does not exist.</h1>
+          <p class="desc">The address may be wrong, or this page was moved or removed.</p>
+          <p class="path" id="requestedPath"></p>
+
+          <div class="actions">
+            <a class="btn btn-primary" href="/home">Back to overview</a>
+            <a class="btn btn-ghost" href="/home/builder">Open builder</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/404.js"></script>
+  </body>
+</html>

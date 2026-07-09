@@ -1,0 +1,81 @@
+<section class="builder-layout">
+  <aside class="builder-palette">
+    <div class="section-head">
+      <div>
+        <span class="section-label">Blocks</span>
+        <h2>Add a block</h2>
+      </div>
+    </div>
+    <input id="paletteSearch" class="text-input" type="search" placeholder="Search blocks…" autocomplete="off" />
+    <div class="palette-list" id="paletteList">
+      <p class="empty-state">Loading blocks…</p>
+    </div>
+  </aside>
+
+  <div class="builder-canvas">
+    <section class="overview-panel builder-meta">
+      <div class="section-head">
+        <div>
+          <span class="section-label">Script</span>
+          <h2>Details</h2>
+        </div>
+        <span class="section-badge muted" id="builderStatus">New</span>
+      </div>
+
+      <div class="meta-grid">
+        <label class="field">
+          <span>Name</span>
+          <input id="scriptName" class="text-input" type="text" maxlength="120" placeholder="My script" />
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <input id="scriptDescription" class="text-input" type="text" maxlength="500" placeholder="Optional summary" />
+        </label>
+      </div>
+
+      <div class="settings-row">
+        <label class="toggle-field">
+          <input id="settingEchoOff" type="checkbox" checked />
+          <span>Add <code>@echo off</code></span>
+        </label>
+        <label class="field field-inline">
+          <span>Window title</span>
+          <input id="settingTitle" class="text-input" type="text" maxlength="200" placeholder="Optional" />
+        </label>
+        <label class="field field-inline field-narrow">
+          <span>Color code</span>
+          <input id="settingColor" class="text-input" type="text" maxlength="2" placeholder="0A" />
+        </label>
+      </div>
+    </section>
+
+    <section class="overview-panel builder-blocks">
+      <div class="section-head">
+        <div>
+          <span class="section-label">Sequence</span>
+          <h2>Blocks</h2>
+        </div>
+        <span class="section-badge muted" id="blockCount">0 blocks</span>
+      </div>
+      <div class="block-list" id="blockList">
+        <p class="empty-state">No blocks yet. Add one from the left panel.</p>
+      </div>
+    </section>
+  </div>
+
+  <aside class="builder-preview">
+    <div class="section-head">
+      <div>
+        <span class="section-label">Output</span>
+        <h2>Preview</h2>
+      </div>
+    </div>
+    <pre class="preview-code" id="previewCode" aria-live="polite"></pre>
+    <div class="preview-actions">
+      <button class="btn btn-ghost btn-compact" id="copyBtn" type="button">Copy</button>
+      <button class="btn btn-ghost btn-compact" id="downloadBtn" type="button">Download .bat</button>
+      <button class="btn btn-primary" id="saveBtn" type="button">Save</button>
+    </div>
+    <p class="preview-hint" id="builderMessage" aria-live="polite"></p>
+  </aside>
+</section>

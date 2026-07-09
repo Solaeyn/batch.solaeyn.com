@@ -1,0 +1,17 @@
+const getCookieValue=e=>{const t=`${encodeURIComponent(e)}=`,n=document.cookie?document.cookie.split(";"):[];for(const a of n){const s=a.trim();if(s.startsWith(t))return decodeURIComponent(s.slice(t.length))}return""},api=async(e,t={})=>{const n=new Headers(t.headers||{});n.has("Content-Type")||n.set("Content-Type","application/json");const a=getCookieValue("csrfToken");a&&n.set("x-csrf-token",a);const s=await fetch(e,{credentials:"same-origin",...t,headers:n});let i={};return(s.headers.get("content-type")||"").includes("application/json")&&(i=await s.json()),{ok:s.ok,status:s.status,data:i}},escapeHtml=e=>String(e??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),formatDate=e=>{if(!e)return"Never";const t=new Date(e);return Number.isNaN(t.getTime())?"Never":t.toLocaleString(void 0,{month:"short",day:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"})},listEl=document.getElementById("scriptsList"),countEl=document.getElementById("scriptsCount"),searchEl=document.getElementById("scriptSearch"),messageEl=document.getElementById("dashboardMessage");let allScripts=[],searchTerm="";const setMessage=(e,t=!1)=>{messageEl&&(messageEl.textContent=e,messageEl.classList.toggle("ok",t))},render=()=>{if(!listEl)return;const e=searchTerm?allScripts.filter(t=>t.name.toLowerCase().includes(searchTerm)):allScripts;if(countEl&&(countEl.textContent=`${allScripts.length} script${allScripts.length===1?"":"s"}`),!e.length){listEl.innerHTML=allScripts.length?'<p class="empty-state">No scripts match your search.</p>':'<p class="empty-state">No scripts yet. <a href="/home/builder">Build your first one.</a></p>';return}listEl.innerHTML=e.map(t=>`
+        <article class="script-card" data-script-id="${t.id}">
+          <div class="script-card-main">
+            <h3>${escapeHtml(t.name)}</h3>
+            ${t.description?`<p>${escapeHtml(t.description)}</p>`:""}
+            <div class="script-card-meta">
+              <span>${t.blockCount} block${t.blockCount===1?"":"s"}</span>
+              <span>Edited ${escapeHtml(formatDate(t.updatedAt))}</span>
+            </div>
+          </div>
+          <div class="script-card-actions">
+            <a class="btn-xs" href="/home/builder?script=${t.id}">Edit</a>
+            <a class="btn-xs" href="/api/scripts/${t.id}/download">Download</a>
+            <button class="btn-xs danger" type="button" data-action="delete" data-id="${t.id}">Delete</button>
+          </div>
+        </article>
+      `).join("")},deleteScript=async e=>{if(!window.confirm("Delete this script? This cannot be undone."))return;const t=await api(`/api/scripts/${e}`,{method:"DELETE"});if(t.status===401||t.status===403){window.location.href="/login";return}if(!t.ok){setMessage(t.data.message||"Failed to delete script.");return}allScripts=allScripts.filter(n=>n.id!==e),render(),setMessage("Script deleted.",!0)};listEl?.addEventListener("click",e=>{const t=e.target.closest('[data-action="delete"]');if(!t)return;const n=Number(t.dataset.id);n&&deleteScript(n)}),searchEl?.addEventListener("input",()=>{searchTerm=(searchEl.value||"").trim().toLowerCase(),render()});const load=async()=>{const e=await api("/api/scripts");if(e.status===401||e.status===403){window.location.href="/login";return}if(!e.ok){listEl&&(listEl.innerHTML='<p class="empty-state">Failed to load scripts.</p>');return}allScripts=e.data.scripts||[],render()};load();
