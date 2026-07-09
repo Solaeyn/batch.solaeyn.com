@@ -82,9 +82,47 @@ Builder data lives in a single table:
 
 `user_id` is a plain indexed column (no cross-database foreign key). Ownership is enforced in application queries.
 
-## Deployment notes
+## Deploy to Coolify
 
-- Keep this app behind HTTPS in production.
-- Ensure solaeyn.com sets the `sid` cookie with `Domain=.solaeyn.com`.
-- Use the same Redis instance so session keys `sess:<sid>` are visible.
-- Coolify/internal PostgreSQL usually does not support SSL. Leave `DATABASE_SSL_MODE` unset or set it to `disable`.
+The app listens on `process.env.PORT` and exposes `GET /api/health` for health checks. Both build packs below work.
+
+### Option A: Nixpacks (recommended)
+
+1. Create a new Coolify application from this repository.
+2. Select the **Nixpacks** build pack (it reads `nixpacks.toml`). Nixpacks installs all
+   dependencies, runs `npm run build:client` to generate `public/**/*.js`, then starts with `npm start`.
+3. Set the exposed port to `3020` (or set `PORT` and match it).
+4. Add a PostgreSQL and a Redis service, and reuse the **same Redis** that powers solaeyn.com sessions.
+5. Configure environment variables (see below).
+6. Deploy.
+
+### Option B: Dockerfile
+
+1. Select the **Dockerfile** build pack. The multi-stage `Dockerfile` builds the client, installs
+   production-only dependencies, and runs as the non-root `node` user.
+2. `.dockerignore` keeps `node_modules`, `.env`, `.git`, and tests out of the build context.
+3. The image exposes port `3020` and includes a `HEALTHCHECK` that calls `/api/health`.
+
+### Coolify environment variables
+
+Required:
+
+- `DATABASE_URL`
+- `BATCH_DATABASE_URL` (falls back to `DATABASE_URL` when empty)
+- `REDIS_URL` (same Redis instance as solaeyn.com)
+
+Recommended:
+
+- `NODE_ENV=production`
+- `PORT=3020`
+- `CSRF_SECRET` (a stable 32+ char secret; an ephemeral key is used when empty)
+- `AUTH_LOGIN_URL` (for example `https://solaeyn.com/login`)
+- `SESSION_COOKIE_DOMAIN=.solaeyn.com`
+
+### Deployment notes
+
+- Keep this app behind HTTPS in production and serve it from a subdomain of the auth apex (for example `batch.solaeyn.com`).
+- Ensure solaeyn.com sets the `sid` cookie with `Domain=.solaeyn.com` so the shared session is visible here.
+- Use the same Redis instance so session keys `sess:<sid>` resolve.
+- Coolify/internal PostgreSQL usually does not support SSL. Leave `DATABASE_SSL_MODE` unset or set it to `disable`, and remove any `sslmode=require` from the connection strings unless your provider requires SSL.
+- The `batch_scripts` table is created automatically on startup; no manual migration step is required.
